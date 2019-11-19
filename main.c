@@ -2,20 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-void make_random_image(long int width, long int height) {
+void make_random_image(long int width, long int height, char* pFilename) {
     int binaryPixel = 0;
 
 	// Create PBM image file
-	FILE* pFile = fopen("image.pbm", "w");
+	FILE* pFile = fopen(pFilename, "w");
 
 	// PBM file extension header (Portable BitMap magic identifier)
 	fprintf(pFile, "P1\n");
 
 	// Write image width & height to file
 	fprintf(pFile, "%lu %lu\n", width, height);
-
-	// Random seed initialization
-	srand(time(NULL));
 
 	// Write image data to file
 	for (int j = 0; j < height; j++) {
@@ -35,12 +32,28 @@ void make_random_image(long int width, long int height) {
 
 int main(int argc, char** argv) {
     long int width, height;
+
+    // Random seed initialization
+	srand(time(NULL));
     
     if (argc == 3) {
         width = strtol(argv[1], NULL, 10);
         height = strtol(argv[2], NULL, 10);
 
-        make_random_image(width, height);
+        make_random_image(width, height, "image.pbm");
+    } else if (argc == 4) {
+    	width = strtol(argv[1], NULL, 10);
+        height = strtol(argv[2], NULL, 10);
+
+        long int imageCount = strtol(argv[3], NULL, 10);
+        char *pFilename = (char*) malloc(1024 * sizeof(char));
+
+        for (long int i = 0; i < imageCount; i++) {
+        	sprintf(pFilename, "image_%ld.pbm", i);
+        	make_random_image(width, height, pFilename);
+        }
+
+        free(pFilename);
     } else {
         fprintf(stderr, "Invalid number of arguments.");
     }
