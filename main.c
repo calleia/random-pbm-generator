@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 void make_random_image(long int width, long int height) {
     int binaryPixel = 0;
@@ -13,9 +14,15 @@ void make_random_image(long int width, long int height) {
 	// Write image width & height to file
 	fprintf(pFile, "%lu %lu\n", width, height);
 
+	// Random seed initialization
+	srand(time(NULL));
+
 	// Write image data to file
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
+			// Generates a random binary pixel value
+			binaryPixel = rand() % 2; // [0, 1]
+
 			fprintf(pFile, "%d ", binaryPixel);
 		}
 
